@@ -120,27 +120,17 @@ class Main1():
 
     global onionRoute
 
-    simpleMessage = "Hello!!!!!"
-    CMD1 = "MSG"
-    CMD2 = "FWD"
-    CMD3 = "FWD"
+    simpleMessage = b'Hello!!!!!'
 
-    CMD1 = CMD1.encode('utf-8')
-    CMD2 = CMD2.encode('utf-8')
-    CMD3 = CMD3.encode('utf-8')
 
-    simpleMessage = simpleMessage.encode('utf-8)')
 
-    messagePackage1 = CMD1 + simpleMessage
-    onionLayer1 = encryption.symmetricEncryption(key1[0], key1[1], messagePackage1)
+    onionLayer1 = encryption.symmetricEncryption(key1[0], key1[1], simpleMessage)
 
-    messagePackage2 = CMD2 + onionLayer1
 
-    onionLayer2 = encryption.symmetricEncryption(key2[0], key2[1], messagePackage2)
+    onionLayer2 = encryption.symmetricEncryption(key2[0], key2[1], onionLayer1)
 
-    messagePackage3 = CMD3 + onionLayer2
 
-    onionLayer3 = encryption.symmetricEncryption(key3[0], key3[1], messagePackage3)
+    onionLayer3 = encryption.symmetricEncryption(key3[0], key3[1], onionLayer2)
 
     onionLayerPeeled3 = encryption.symmetricDecrypt(key3[0], key3[1], onionLayer3)
     print(onionLayerPeeled3)
