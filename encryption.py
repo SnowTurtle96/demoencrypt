@@ -153,17 +153,21 @@ class Main1():
     dict['msg'] = onionLayer3
     dict['cmd'] = CMD1
 
+    #Full onion encryption dict, this is what we will send to the first OR
     print(dict)
     onionLayerPeeled3 = encryption.symmetricDecrypt(key3[0], key3[1], dict['msg'])
     onionLayerPeeled2 = encryption.symmetricDecrypt(key2[0], key2[1], onionLayerPeeled3)
     onionLayerPeeled1 = encryption.symmetricDecrypt(key1[0], key1[1], onionLayerPeeled2)
 
     cmd1 = encryption.symmetricDecrypt(key3[0], key3[1], dict['cmd'])
+    #Contains FWD within it but full of garbage characters, padding?
     print(cmd1)
     cmd2 = encryption.symmetricDecrypt(key2[0], key2[1], cmd1)
+    #Contains FWD within it but full of garbage characters, issue with byte concatenation?
     print(cmd2)
     cmd3 = encryption.symmetricDecrypt(key1[0], key1[1], cmd2)
-    print(onionLayerPeeled1.decode('utf-8'))
+    #MSG succeeds! NO string concat involved
+    print("success  \n" + onionLayerPeeled1.decode('utf-8'))
 
 
     print(cmd3)
