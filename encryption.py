@@ -126,12 +126,16 @@ class Main1():
     CMD1 = "MSG"
     CMD2 = "FWD"
     CMD3 = "FWD"
+    IP1 = "192.168.0.1"
+    IP2 = "192.168.0.2"
+    IP3 = "192.168.0.3"
 
     CMD1 = CMD1.encode('utf-8')
     CMD2 = CMD2.encode('utf-8')
     CMD3 = CMD3.encode('utf-8')
 
-    CMD1
+
+
     CMD1 = encryption.symmetricEncryption(key1[0], key1[1], CMD1)
     CMD1 += CMD2
     CMD1 = encryption.symmetricEncryption(key2[0], key2[1], CMD1)
