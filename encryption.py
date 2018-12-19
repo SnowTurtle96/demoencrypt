@@ -3,7 +3,8 @@ from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.backends.openssl import backend
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa, padding
-from cryptography.hazmat.primitives import padding as padding1
+from cryptography.hazmat.primitives import padding
+
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 
@@ -120,6 +121,7 @@ class Main1():
 
     global onionRoute
 
+
     simpleMessage = "Hello!!!!!"
     CMD1 = "MSG"
     CMD2 = "FWD"
@@ -129,27 +131,39 @@ class Main1():
     CMD2 = CMD2.encode('utf-8')
     CMD3 = CMD3.encode('utf-8')
 
+    CMD1
+    CMD1 = encryption.symmetricEncryption(key1[0], key1[1], CMD1)
+    CMD1 += CMD2
+    CMD1 = encryption.symmetricEncryption(key2[0], key2[1], CMD1)
+    CMD1 += CMD3
+    CMD1 = encryption.symmetricEncryption(key3[0], key3[1], CMD1)
+
+
     simpleMessage = simpleMessage.encode('utf-8)')
 
-    messagePackage1 = CMD1 + simpleMessage
-    onionLayer1 = encryption.symmetricEncryption(key1[0], key1[1], messagePackage1)
+    onionLayer1 = encryption.symmetricEncryption(key1[0], key1[1], simpleMessage)
+    onionLayer2 = encryption.symmetricEncryption(key2[0], key2[1], onionLayer1)
+    onionLayer3 = encryption.symmetricEncryption(key3[0], key3[1], onionLayer2)
 
-    messagePackage2 = CMD2 + onionLayer1
+    dict = {}
+    dict['msg'] = onionLayer3
+    dict['cmd'] = CMD1
 
-    onionLayer2 = encryption.symmetricEncryption(key2[0], key2[1], messagePackage2)
-
-    messagePackage3 = CMD3 + onionLayer2
-
-    onionLayer3 = encryption.symmetricEncryption(key3[0], key3[1], messagePackage3)
-
-    onionLayerPeeled3 = encryption.symmetricDecrypt(key3[0], key3[1], onionLayer3)
-    print(onionLayerPeeled3)
-
+    print(dict)
+    onionLayerPeeled3 = encryption.symmetricDecrypt(key3[0], key3[1], dict['msg'])
     onionLayerPeeled2 = encryption.symmetricDecrypt(key2[0], key2[1], onionLayerPeeled3)
-    print(onionLayerPeeled2)
-
     onionLayerPeeled1 = encryption.symmetricDecrypt(key1[0], key1[1], onionLayerPeeled2)
-    print(onionLayerPeeled1)
+
+    cmd1 = encryption.symmetricDecrypt(key3[0], key3[1], dict['cmd'])
+    print(cmd1)
+    cmd2 = encryption.symmetricDecrypt(key2[0], key2[1], cmd1)
+    print(cmd2)
+    cmd3 = encryption.symmetricDecrypt(key1[0], key1[1], cmd2)
+    print(onionLayerPeeled1.decode('utf-8'))
+
+
+    print(cmd3)
+
 
 def main():
         # display some lines
